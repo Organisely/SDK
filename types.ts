@@ -176,7 +176,7 @@ export interface SendEmailRequest {
   reply_to?: string
   attachments?: Array<{
     filename: string
-    content: Buffer | string
+    content: string | Uint8Array
     contentType: string
   }>
   scheduled_at?: string
@@ -277,7 +277,6 @@ export interface CreateIntegrationRequest {
   documentation_url?: string
 }
 
-// Integration dependency resolution
 export interface IntegrationDependency {
   base_integration_id: string
   base_integration_name: string
@@ -386,7 +385,7 @@ export interface RateLimitInfo {
   retryAfter?: number
 }
 
-// SDK Internal Types
+// Request Options
 export interface RequestOptions {
   method?: string
   body?: string
@@ -403,6 +402,7 @@ export interface RetryConfig {
   maxRetryDelay: number
 }
 
+// Logger Interface
 export interface Logger {
   debug(message: string, ...args: any[]): void
   info(message: string, ...args: any[]): void

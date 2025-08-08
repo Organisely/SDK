@@ -17,6 +17,7 @@
     "LICENSE"
   ],
   "scripts": {
+    "start": "node integrations/gmail-mcp",
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "jest",
@@ -59,7 +60,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {},
+  "dependencies": {
+    "googleapis": "^149.0.0"
+  },
   "devDependencies": {
     "@types/jest": "^29.0.0",
     "@types/node": "^20.6.2",
@@ -75,7 +78,10 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "testMatch": ["**/__tests__/**/*.ts", "**/?(*.)+(spec|test).ts"],
+    "testMatch": [
+      "**/__tests__/**/*.ts",
+      "**/?(*.)+(spec|test).ts"
+    ],
     "collectCoverageFrom": [
       "src/**/*.ts",
       "!src/**/*.d.ts",
