@@ -33,8 +33,10 @@
   "exclude": [
     "node_modules",
     "dist",
+    "examples/**",
     "**/*.test.ts",
     "**/*.spec.ts",
-    "**/__tests__/**"
+    "**/__tests__/**",
+    "**/*.d.ts"
   ]
 } 

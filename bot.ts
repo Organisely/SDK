@@ -10,10 +10,28 @@ export interface BotConfig {
 export class OrganiselyBot {
   private webhookSecret?: string
   private onEvent?: (event: OrganiselyEvent) => void | Promise<void>
+  private mcpTools: Record<string, { definition: any; handler: Function }> = {}
 
   constructor(config: BotConfig = {}) {
     this.webhookSecret = config.webhookSecret
     this.onEvent = config.onEvent
+  }
+
+  /**
+   * Register an MCP tool for this bot
+   * @param name string - Tool name
+   * @param definition object - Tool definition (schema, description, etc)
+   * @param handler function - Tool handler function
+   */
+  registerMcpTool(name: string, definition: any, handler?: Function): void {
+    this.mcpTools[name] = { definition, handler: handler || (() => {}) }
+  }
+
+  /**
+   * Get all registered MCP tools
+   */
+  getRegisteredMcpTools(): Record<string, { definition: any; handler: Function }> {
+    return this.mcpTools
   }
 
   async handleWebhook(payload: BotWebhookPayload): Promise<ApiResponse<void>> {

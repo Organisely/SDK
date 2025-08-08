@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.API_ENDPOINTS = exports.SUPPORTED_LOCALES = exports.COMMON_TIMEZONES = exports.NOTIFICATION_TYPES = exports.EVENT_TYPES_CALENDAR = exports.HABIT_FREQUENCIES = exports.ERROR_CODES = exports.HTTP_STATUS = exports.INTEGRATION_STATUS = exports.INTEGRATION_TYPES = exports.SCOPES = exports.EVENT_TYPES = exports.DEFAULT_CONFIG = exports.SDK_VERSION = exports.ORGANISELY_OAUTH_BASE_URL = exports.ORGANISELY_API_BASE_URL = void 0;
+exports.OAUTH_CONFIG = exports.WEBHOOK_CONFIG = exports.RETRY_CONFIG = exports.DEFAULT_HEADERS = exports.ERROR_CODES = exports.HTTP_STATUS = exports.API_ENDPOINTS = exports.SCOPES = exports.EVENT_TYPES = exports.DEFAULT_CONFIG = exports.SDK_VERSION = exports.ORGANISELY_OAUTH_BASE_URL = exports.ORGANISELY_API_BASE_URL = void 0;
 // API Configuration
 exports.ORGANISELY_API_BASE_URL = 'https://api.organisely.com/v1';
 exports.ORGANISELY_OAUTH_BASE_URL = 'https://organisely.com/oauth';
@@ -89,24 +89,44 @@ exports.SCOPES = {
     WRITE_PROFILE: 'write:profile',
     WRITE_INTEGRATIONS: 'write:integrations',
     // Admin permissions
-    ADMIN: 'admin',
     ADMIN_USERS: 'admin:users',
     ADMIN_INTEGRATIONS: 'admin:integrations',
-    ADMIN_SYSTEM: 'admin:system'
+    ADMIN_SYSTEM: 'admin:system',
+    // Bot permissions
+    BOT_TRIGGER: 'bot:trigger',
+    BOT_ACTION: 'bot:action',
+    BOT_WEBHOOK: 'bot:webhook'
 };
-// Integration Types
-exports.INTEGRATION_TYPES = {
-    OAUTH2: 'oauth2',
-    BOT: 'bot',
-    WEBHOOK: 'webhook'
-};
-// Integration Status
-exports.INTEGRATION_STATUS = {
-    DRAFT: 'draft',
-    ACTIVE: 'active',
-    INACTIVE: 'inactive',
-    SUSPENDED: 'suspended',
-    PENDING_REVIEW: 'pending_review'
+// API Endpoints
+exports.API_ENDPOINTS = {
+    // User endpoints
+    USERS: '/users',
+    USER_PROFILE: '/users/profile',
+    USER_PREFERENCES: '/users/preferences',
+    // Habit endpoints
+    HABITS: '/habits',
+    HABIT_COMPLETIONS: '/habits/:id/completions',
+    HABIT_STREAKS: '/habits/:id/streaks',
+    // Email endpoints
+    EMAILS: '/emails',
+    EMAIL_SEND: '/emails/send',
+    EMAIL_ATTACHMENTS: '/emails/:id/attachments',
+    // Calendar endpoints
+    CALENDAR_EVENTS: '/calendar/events',
+    CALENDAR_CALENDARS: '/calendar/calendars',
+    CALENDAR_ATTENDEES: '/calendar/events/:id/attendees',
+    // Integration endpoints
+    INTEGRATIONS: '/integrations',
+    INTEGRATION_WEBHOOKS: '/integrations/:id/webhooks',
+    INTEGRATION_OAUTH: '/integrations/:id/oauth',
+    // Event endpoints
+    EVENTS: '/events',
+    EVENTS_TRACK: '/events/track',
+    EVENTS_BROADCAST: '/events/broadcast',
+    // System endpoints
+    HEALTH: '/health',
+    VERSION: '/version',
+    STATUS: '/status'
 };
 // HTTP Status Codes
 exports.HTTP_STATUS = {
@@ -117,8 +137,8 @@ exports.HTTP_STATUS = {
     UNAUTHORIZED: 401,
     FORBIDDEN: 403,
     NOT_FOUND: 404,
-    METHOD_NOT_ALLOWED: 405,
     CONFLICT: 409,
+    METHOD_NOT_ALLOWED: 405,
     UNPROCESSABLE_ENTITY: 422,
     TOO_MANY_REQUESTS: 429,
     INTERNAL_SERVER_ERROR: 500,
@@ -128,115 +148,57 @@ exports.HTTP_STATUS = {
 // Error Codes
 exports.ERROR_CODES = {
     // Authentication errors
-    INVALID_API_KEY: 'invalid_api_key',
-    INVALID_TOKEN: 'invalid_token',
-    TOKEN_EXPIRED: 'token_expired',
-    INSUFFICIENT_SCOPES: 'insufficient_scopes',
-    // Rate limiting
-    RATE_LIMITED: 'rate_limited',
-    QUOTA_EXCEEDED: 'quota_exceeded',
+    INVALID_API_KEY: 'INVALID_API_KEY',
+    INVALID_TOKEN: 'INVALID_TOKEN',
+    TOKEN_EXPIRED: 'TOKEN_EXPIRED',
+    INSUFFICIENT_PERMISSIONS: 'INSUFFICIENT_PERMISSIONS',
+    INSUFFICIENT_SCOPES: 'INSUFFICIENT_SCOPES',
     // Validation errors
-    VALIDATION_ERROR: 'validation_error',
-    INVALID_REQUEST: 'invalid_request',
-    MISSING_REQUIRED_FIELD: 'missing_required_field',
+    VALIDATION_ERROR: 'VALIDATION_ERROR',
+    MISSING_REQUIRED_FIELD: 'MISSING_REQUIRED_FIELD',
+    INVALID_FORMAT: 'INVALID_FORMAT',
     // Resource errors
-    RESOURCE_NOT_FOUND: 'resource_not_found',
-    RESOURCE_ALREADY_EXISTS: 'resource_already_exists',
-    RESOURCE_CONFLICT: 'resource_conflict',
+    RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND',
+    RESOURCE_ALREADY_EXISTS: 'RESOURCE_ALREADY_EXISTS',
+    RESOURCE_CONFLICT: 'RESOURCE_CONFLICT',
+    // Rate limiting
+    RATE_LIMIT_EXCEEDED: 'RATE_LIMIT_EXCEEDED',
+    TOO_MANY_REQUESTS: 'TOO_MANY_REQUESTS',
+    RATE_LIMITED: 'RATE_LIMITED',
     // Integration errors
-    INTEGRATION_NOT_FOUND: 'integration_not_found',
-    INTEGRATION_DISABLED: 'integration_disabled',
-    WEBHOOK_FAILED: 'webhook_failed',
+    INTEGRATION_ERROR: 'INTEGRATION_ERROR',
+    WEBHOOK_FAILED: 'WEBHOOK_FAILED',
+    OAUTH_ERROR: 'OAUTH_ERROR',
+    // Network errors
+    NETWORK_ERROR: 'NETWORK_ERROR',
     // System errors
-    INTERNAL_ERROR: 'internal_error',
-    SERVICE_UNAVAILABLE: 'service_unavailable',
-    TIMEOUT: 'timeout',
-    NETWORK_ERROR: 'network_error'
+    INTERNAL_ERROR: 'INTERNAL_ERROR',
+    SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
+    MAINTENANCE_MODE: 'MAINTENANCE_MODE'
 };
-// Habit Frequencies
-exports.HABIT_FREQUENCIES = {
-    DAILY: 'daily',
-    WEEKLY: 'weekly',
-    MONTHLY: 'monthly',
-    CUSTOM: 'custom'
+// Default Headers
+exports.DEFAULT_HEADERS = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'User-Agent': `Organisely-SDK/${exports.SDK_VERSION}`
 };
-// Calendar Event Types
-exports.EVENT_TYPES_CALENDAR = {
-    MEETING: 'meeting',
-    APPOINTMENT: 'appointment',
-    REMINDER: 'reminder',
-    TASK: 'task',
-    CUSTOM: 'custom'
+// Retry Configuration
+exports.RETRY_CONFIG = {
+    maxRetries: 3,
+    retryDelay: 1000,
+    backoffMultiplier: 2,
+    maxRetryDelay: 30000
 };
-// Notification Types
-exports.NOTIFICATION_TYPES = {
-    EMAIL: 'email',
-    PUSH: 'push',
-    SMS: 'sms',
-    WEBHOOK: 'webhook'
+// Webhook Configuration
+exports.WEBHOOK_CONFIG = {
+    timeout: 30000,
+    maxRetries: 3,
+    retryDelay: 1000
 };
-// Time Zones
-exports.COMMON_TIMEZONES = [
-    'UTC',
-    'America/New_York',
-    'America/Chicago',
-    'America/Denver',
-    'America/Los_Angeles',
-    'Europe/London',
-    'Europe/Paris',
-    'Europe/Berlin',
-    'Asia/Tokyo',
-    'Asia/Shanghai',
-    'Australia/Sydney'
-];
-// Locales
-exports.SUPPORTED_LOCALES = [
-    'en-US',
-    'en-GB',
-    'es-ES',
-    'fr-FR',
-    'de-DE',
-    'it-IT',
-    'pt-BR',
-    'ja-JP',
-    'zh-CN',
-    'ko-KR'
-];
-// API Endpoints
-exports.API_ENDPOINTS = {
-    // Users
-    USERS: '/users',
-    USER_PROFILE: '/users/profile',
-    USER_PREFERENCES: '/users/preferences',
-    // Habits
-    HABITS: '/habits',
-    HABIT_COMPLETIONS: '/habits/completions',
-    HABIT_STATS: '/habits/stats',
-    // Emails
-    EMAILS: '/emails',
-    EMAIL_SEND: '/emails/send',
-    EMAIL_THREADS: '/emails/threads',
-    // Calendar
-    CALENDAR_EVENTS: '/calendar/events',
-    CALENDAR_CALENDARS: '/calendar/calendars',
-    // Events
-    EVENTS: '/events',
-    EVENTS_TRACK: '/events/track',
-    EVENTS_BROADCAST: '/events/broadcast',
-    // Integrations
-    INTEGRATIONS: '/integrations',
-    INTEGRATIONS_OAUTH2: '/integrations/oauth2',
-    INTEGRATIONS_BOT: '/integrations/bot',
-    // Webhooks
-    WEBHOOKS: '/webhooks',
-    WEBHOOKS_VERIFY: '/webhooks/verify',
-    // OAuth
-    OAUTH_AUTHORIZE: '/oauth/authorize',
-    OAUTH_TOKEN: '/oauth/token',
-    OAUTH_REVOKE: '/oauth/revoke',
-    // Analytics
-    ANALYTICS: '/analytics',
-    ANALYTICS_HABITS: '/analytics/habits',
-    ANALYTICS_PRODUCTIVITY: '/analytics/productivity'
+// OAuth Configuration
+exports.OAUTH_CONFIG = {
+    stateLength: 32,
+    codeVerifierLength: 128,
+    pkceMethod: 'S256'
 };
 //# sourceMappingURL=constants.js.map

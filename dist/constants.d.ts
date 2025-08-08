@@ -70,22 +70,35 @@ export declare const SCOPES: {
     readonly WRITE_EVENTS: "write:events";
     readonly WRITE_PROFILE: "write:profile";
     readonly WRITE_INTEGRATIONS: "write:integrations";
-    readonly ADMIN: "admin";
     readonly ADMIN_USERS: "admin:users";
     readonly ADMIN_INTEGRATIONS: "admin:integrations";
     readonly ADMIN_SYSTEM: "admin:system";
+    readonly BOT_TRIGGER: "bot:trigger";
+    readonly BOT_ACTION: "bot:action";
+    readonly BOT_WEBHOOK: "bot:webhook";
 };
-export declare const INTEGRATION_TYPES: {
-    readonly OAUTH2: "oauth2";
-    readonly BOT: "bot";
-    readonly WEBHOOK: "webhook";
-};
-export declare const INTEGRATION_STATUS: {
-    readonly DRAFT: "draft";
-    readonly ACTIVE: "active";
-    readonly INACTIVE: "inactive";
-    readonly SUSPENDED: "suspended";
-    readonly PENDING_REVIEW: "pending_review";
+export declare const API_ENDPOINTS: {
+    readonly USERS: "/users";
+    readonly USER_PROFILE: "/users/profile";
+    readonly USER_PREFERENCES: "/users/preferences";
+    readonly HABITS: "/habits";
+    readonly HABIT_COMPLETIONS: "/habits/:id/completions";
+    readonly HABIT_STREAKS: "/habits/:id/streaks";
+    readonly EMAILS: "/emails";
+    readonly EMAIL_SEND: "/emails/send";
+    readonly EMAIL_ATTACHMENTS: "/emails/:id/attachments";
+    readonly CALENDAR_EVENTS: "/calendar/events";
+    readonly CALENDAR_CALENDARS: "/calendar/calendars";
+    readonly CALENDAR_ATTENDEES: "/calendar/events/:id/attendees";
+    readonly INTEGRATIONS: "/integrations";
+    readonly INTEGRATION_WEBHOOKS: "/integrations/:id/webhooks";
+    readonly INTEGRATION_OAUTH: "/integrations/:id/oauth";
+    readonly EVENTS: "/events";
+    readonly EVENTS_TRACK: "/events/track";
+    readonly EVENTS_BROADCAST: "/events/broadcast";
+    readonly HEALTH: "/health";
+    readonly VERSION: "/version";
+    readonly STATUS: "/status";
 };
 export declare const HTTP_STATUS: {
     readonly OK: 200;
@@ -95,8 +108,8 @@ export declare const HTTP_STATUS: {
     readonly UNAUTHORIZED: 401;
     readonly FORBIDDEN: 403;
     readonly NOT_FOUND: 404;
-    readonly METHOD_NOT_ALLOWED: 405;
     readonly CONFLICT: 409;
+    readonly METHOD_NOT_ALLOWED: 405;
     readonly UNPROCESSABLE_ENTITY: 422;
     readonly TOO_MANY_REQUESTS: 429;
     readonly INTERNAL_SERVER_ERROR: 500;
@@ -104,72 +117,47 @@ export declare const HTTP_STATUS: {
     readonly SERVICE_UNAVAILABLE: 503;
 };
 export declare const ERROR_CODES: {
-    readonly INVALID_API_KEY: "invalid_api_key";
-    readonly INVALID_TOKEN: "invalid_token";
-    readonly TOKEN_EXPIRED: "token_expired";
-    readonly INSUFFICIENT_SCOPES: "insufficient_scopes";
-    readonly RATE_LIMITED: "rate_limited";
-    readonly QUOTA_EXCEEDED: "quota_exceeded";
-    readonly VALIDATION_ERROR: "validation_error";
-    readonly INVALID_REQUEST: "invalid_request";
-    readonly MISSING_REQUIRED_FIELD: "missing_required_field";
-    readonly RESOURCE_NOT_FOUND: "resource_not_found";
-    readonly RESOURCE_ALREADY_EXISTS: "resource_already_exists";
-    readonly RESOURCE_CONFLICT: "resource_conflict";
-    readonly INTEGRATION_NOT_FOUND: "integration_not_found";
-    readonly INTEGRATION_DISABLED: "integration_disabled";
-    readonly WEBHOOK_FAILED: "webhook_failed";
-    readonly INTERNAL_ERROR: "internal_error";
-    readonly SERVICE_UNAVAILABLE: "service_unavailable";
-    readonly TIMEOUT: "timeout";
-    readonly NETWORK_ERROR: "network_error";
+    readonly INVALID_API_KEY: "INVALID_API_KEY";
+    readonly INVALID_TOKEN: "INVALID_TOKEN";
+    readonly TOKEN_EXPIRED: "TOKEN_EXPIRED";
+    readonly INSUFFICIENT_PERMISSIONS: "INSUFFICIENT_PERMISSIONS";
+    readonly INSUFFICIENT_SCOPES: "INSUFFICIENT_SCOPES";
+    readonly VALIDATION_ERROR: "VALIDATION_ERROR";
+    readonly MISSING_REQUIRED_FIELD: "MISSING_REQUIRED_FIELD";
+    readonly INVALID_FORMAT: "INVALID_FORMAT";
+    readonly RESOURCE_NOT_FOUND: "RESOURCE_NOT_FOUND";
+    readonly RESOURCE_ALREADY_EXISTS: "RESOURCE_ALREADY_EXISTS";
+    readonly RESOURCE_CONFLICT: "RESOURCE_CONFLICT";
+    readonly RATE_LIMIT_EXCEEDED: "RATE_LIMIT_EXCEEDED";
+    readonly TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS";
+    readonly RATE_LIMITED: "RATE_LIMITED";
+    readonly INTEGRATION_ERROR: "INTEGRATION_ERROR";
+    readonly WEBHOOK_FAILED: "WEBHOOK_FAILED";
+    readonly OAUTH_ERROR: "OAUTH_ERROR";
+    readonly NETWORK_ERROR: "NETWORK_ERROR";
+    readonly INTERNAL_ERROR: "INTERNAL_ERROR";
+    readonly SERVICE_UNAVAILABLE: "SERVICE_UNAVAILABLE";
+    readonly MAINTENANCE_MODE: "MAINTENANCE_MODE";
 };
-export declare const HABIT_FREQUENCIES: {
-    readonly DAILY: "daily";
-    readonly WEEKLY: "weekly";
-    readonly MONTHLY: "monthly";
-    readonly CUSTOM: "custom";
+export declare const DEFAULT_HEADERS: {
+    readonly 'Content-Type': "application/json";
+    readonly Accept: "application/json";
+    readonly 'User-Agent': "Organisely-SDK/1.0.0";
 };
-export declare const EVENT_TYPES_CALENDAR: {
-    readonly MEETING: "meeting";
-    readonly APPOINTMENT: "appointment";
-    readonly REMINDER: "reminder";
-    readonly TASK: "task";
-    readonly CUSTOM: "custom";
+export declare const RETRY_CONFIG: {
+    readonly maxRetries: 3;
+    readonly retryDelay: 1000;
+    readonly backoffMultiplier: 2;
+    readonly maxRetryDelay: 30000;
 };
-export declare const NOTIFICATION_TYPES: {
-    readonly EMAIL: "email";
-    readonly PUSH: "push";
-    readonly SMS: "sms";
-    readonly WEBHOOK: "webhook";
+export declare const WEBHOOK_CONFIG: {
+    readonly timeout: 30000;
+    readonly maxRetries: 3;
+    readonly retryDelay: 1000;
 };
-export declare const COMMON_TIMEZONES: readonly ["UTC", "America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles", "Europe/London", "Europe/Paris", "Europe/Berlin", "Asia/Tokyo", "Asia/Shanghai", "Australia/Sydney"];
-export declare const SUPPORTED_LOCALES: readonly ["en-US", "en-GB", "es-ES", "fr-FR", "de-DE", "it-IT", "pt-BR", "ja-JP", "zh-CN", "ko-KR"];
-export declare const API_ENDPOINTS: {
-    readonly USERS: "/users";
-    readonly USER_PROFILE: "/users/profile";
-    readonly USER_PREFERENCES: "/users/preferences";
-    readonly HABITS: "/habits";
-    readonly HABIT_COMPLETIONS: "/habits/completions";
-    readonly HABIT_STATS: "/habits/stats";
-    readonly EMAILS: "/emails";
-    readonly EMAIL_SEND: "/emails/send";
-    readonly EMAIL_THREADS: "/emails/threads";
-    readonly CALENDAR_EVENTS: "/calendar/events";
-    readonly CALENDAR_CALENDARS: "/calendar/calendars";
-    readonly EVENTS: "/events";
-    readonly EVENTS_TRACK: "/events/track";
-    readonly EVENTS_BROADCAST: "/events/broadcast";
-    readonly INTEGRATIONS: "/integrations";
-    readonly INTEGRATIONS_OAUTH2: "/integrations/oauth2";
-    readonly INTEGRATIONS_BOT: "/integrations/bot";
-    readonly WEBHOOKS: "/webhooks";
-    readonly WEBHOOKS_VERIFY: "/webhooks/verify";
-    readonly OAUTH_AUTHORIZE: "/oauth/authorize";
-    readonly OAUTH_TOKEN: "/oauth/token";
-    readonly OAUTH_REVOKE: "/oauth/revoke";
-    readonly ANALYTICS: "/analytics";
-    readonly ANALYTICS_HABITS: "/analytics/habits";
-    readonly ANALYTICS_PRODUCTIVITY: "/analytics/productivity";
+export declare const OAUTH_CONFIG: {
+    readonly stateLength: 32;
+    readonly codeVerifierLength: 128;
+    readonly pkceMethod: "S256";
 };
 //# sourceMappingURL=constants.d.ts.map

@@ -6,9 +6,25 @@ const crypto_1 = require("crypto");
 class OrganiselyBot {
     webhookSecret;
     onEvent;
+    mcpTools = {};
     constructor(config = {}) {
         this.webhookSecret = config.webhookSecret;
         this.onEvent = config.onEvent;
+    }
+    /**
+     * Register an MCP tool for this bot
+     * @param name string - Tool name
+     * @param definition object - Tool definition (schema, description, etc)
+     * @param handler function - Tool handler function
+     */
+    registerMcpTool(name, definition, handler) {
+        this.mcpTools[name] = { definition, handler: handler || (() => { }) };
+    }
+    /**
+     * Get all registered MCP tools
+     */
+    getRegisteredMcpTools() {
+        return this.mcpTools;
     }
     async handleWebhook(payload) {
         try {

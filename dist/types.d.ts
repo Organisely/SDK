@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export interface OrganiselyConfig {
     apiKey?: string;
     baseUrl?: string;
@@ -156,7 +155,7 @@ export interface SendEmailRequest {
     reply_to?: string;
     attachments?: Array<{
         filename: string;
-        content: Buffer | string;
+        content: string | Uint8Array;
         contentType: string;
     }>;
     scheduled_at?: string;
@@ -224,6 +223,11 @@ export interface OrganiselyIntegration {
     version: string;
     config_schema?: any;
     metadata?: Record<string, any>;
+    extends?: string[];
+    is_base_integration?: boolean;
+    category?: 'email' | 'calendar' | 'communication' | 'productivity' | 'custom';
+    icon?: string;
+    documentation_url?: string;
 }
 export interface CreateIntegrationRequest {
     name: string;
@@ -234,6 +238,29 @@ export interface CreateIntegrationRequest {
     webhook_url?: string;
     config_schema?: any;
     is_public?: boolean;
+    extends?: string[];
+    is_base_integration?: boolean;
+    category?: 'email' | 'calendar' | 'communication' | 'productivity' | 'custom';
+    icon?: string;
+    documentation_url?: string;
+}
+export interface IntegrationDependency {
+    base_integration_id: string;
+    base_integration_name: string;
+    required_scopes: string[];
+    required_events: string[];
+    optional_scopes: string[];
+    optional_events: string[];
+}
+export interface ResolvedIntegration {
+    id: string;
+    name: string;
+    type: 'oauth2' | 'bot' | 'webhook';
+    all_scopes: string[];
+    all_events: string[];
+    dependencies: IntegrationDependency[];
+    base_integrations: OrganiselyIntegration[];
+    is_standalone: boolean;
 }
 export interface OrganiselyEvent {
     id: string;

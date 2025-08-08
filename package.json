@@ -17,6 +17,7 @@
     "LICENSE"
   ],
   "scripts": {
+    "start": "node integrations/gmail-mcp",
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "jest",

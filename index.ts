@@ -1,6 +1,5 @@
 export { OrganiselyClient } from './client'
 export { OrganiselyBot } from './bot'
 export { OrganiselyOAuth } from './oauth'
-export { IntegrationDependencyService } from './integration-dependency-service'
 export * from './types'
 export * from './constants' 
